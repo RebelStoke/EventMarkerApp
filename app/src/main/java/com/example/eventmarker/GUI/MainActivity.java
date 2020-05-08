@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView nav_picture = hView.findViewById(R.id.profileImage);
         nav_email.setText(manager.getUser().getEmail());
         nav_name.setText(manager.getUser().getDisplayName());
-        System.out.println(manager.getUser().getPhotoUrl());
         nav_picture.setImageURI(manager.getUser().getPhotoUrl());
     }
 
