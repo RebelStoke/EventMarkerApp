@@ -1,4 +1,4 @@
-package com.example.eventmarker.GUI.fragments;
+package com.example.eventmarker.View.fragments;
 
 import android.os.Bundle;
 
@@ -9,10 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.eventmarker.BLL.BLLManager;
+import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -31,8 +30,7 @@ public class NewMarkerFragment extends Fragment {
     private double lng;
 
 
-    public NewMarkerFragment() {
-    }
+    public NewMarkerFragment() {}
 
     // TODO: Rename and change types and number of parameters
     public static NewMarkerFragment newInstance(double lat, double lng) {

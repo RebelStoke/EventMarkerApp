@@ -1,4 +1,4 @@
-package com.example.eventmarker.GUI.adapters;
+package com.example.eventmarker.View.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,12 +6,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.eventmarker.BE.MarkerPoint;
-import com.example.eventmarker.BLL.BLLManager;
+import com.example.eventmarker.Entities.MarkerPoint;
+import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.R;
 
 import java.util.List;
@@ -20,9 +18,9 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
     private List<MarkerPoint> mRecycleList;
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public Button deleteButton;
+        private TextView mTextView1;
+        private TextView mTextView2;
+        private Button deleteButton;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -39,15 +37,14 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marker_new, parent, false);
-        RecyclerViewHolder evh = new RecyclerViewHolder(v);
-        return evh;
+        return new RecyclerViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, int position) {
         final MarkerPoint currentItem = mRecycleList.get(position);
-        holder.mTextView1.setText(currentItem.desc);
-        holder.mTextView2.setText(currentItem.markerID);
+        holder.mTextView1.setText(currentItem.getDesc());
+        holder.mTextView2.setText(currentItem.getMarkerID());
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 BLLManager.getInstance().deleteMarker(currentItem);

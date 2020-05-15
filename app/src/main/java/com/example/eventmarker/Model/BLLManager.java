@@ -1,7 +1,7 @@
-package com.example.eventmarker.BLL;
+package com.example.eventmarker.Model;
 
-import com.example.eventmarker.BE.MarkerPoint;
-import com.example.eventmarker.DAL.MarkerRepository;
+import com.example.eventmarker.Entities.MarkerPoint;
+import com.example.eventmarker.Repository.MarkerRepository;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -54,7 +54,7 @@ public class BLLManager {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             MarkerPoint mp = (MarkerPoint) pair.getKey();
-            if(mp.creator_UID.equals(user.getUid()))
+            if(mp.getCreator_UID().equals(user.getUid()))
                 usersMarkers.add(mp);
         }
         return usersMarkers;
@@ -65,35 +65,31 @@ public class BLLManager {
         repo.addMarker(new MarkerPoint(geoPoint, desc, user.getUid()));
     }
 
-
     public void deleteMarker(MarkerPoint mark){
         repo.deleteMarker(mark);
     }
     
-    
     public void readMarker(QueryDocumentSnapshot document) {
         GeoPoint geoPoint = document.getGeoPoint("latLng");
         String desc = document.getString("desc");
-        String creator_uid = document.getString("creator_UID");
-        String id = document.getId();
 
         assert geoPoint != null;
         assert mMap != null;
         Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude())).title(desc));
-        MarkerPoint point = new MarkerPoint(id,geoPoint, desc, creator_uid);
+        MarkerPoint point = new MarkerPoint(document.getGeoPoint("latLng"), document.getString("desc"), document.getString("creator_UID"));
+        point.setMarkerID(document.getId());
         markersHashMap.put(point, m);
     }
 
     public void removeMarker(QueryDocumentSnapshot document) {
-        GeoPoint geoPoint = document.getGeoPoint("latLng");
-        String desc = document.getString("desc");
-        String creator_uid = document.getString("creator_uid");
-        String id = document.getId();
 
-        MarkerPoint markerToDelete = new MarkerPoint(id,geoPoint, desc, creator_uid);
+        MarkerPoint markerToDelete = new MarkerPoint(document.getGeoPoint("latLng"),
+                document.getString("desc"),
+                document.getString("creator_uid"));
+        markerToDelete.setMarkerID(document.getId());
 
         for (Map.Entry<MarkerPoint, Marker> entry : markersHashMap.entrySet()) {
-            if (entry.getKey().latLng.equals(markerToDelete.latLng)) {
+            if (entry.getKey().getLatLng().equals(markerToDelete.getLatLng())) {
                 entry.getValue().remove();
                 markersHashMap.remove(entry.getKey());
                 break;

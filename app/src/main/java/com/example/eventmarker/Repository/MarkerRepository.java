@@ -1,11 +1,10 @@
-package com.example.eventmarker.DAL;
+package com.example.eventmarker.Repository;
 
 import android.util.Log;
 
-import com.example.eventmarker.BE.MarkerPoint;
-import com.example.eventmarker.BLL.BLLManager;
+import com.example.eventmarker.Entities.MarkerPoint;
+import com.example.eventmarker.Model.BLLManager;
 import com.google.firebase.database.annotations.Nullable;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,23 +14,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class MarkerRepository {
 
    private FirebaseFirestore database = FirebaseFirestore.getInstance();
-   private CollectionReference markersCollection = database.collection("eventMarkers");
    private static final String TAG = "MyActivity";
 
-   public MarkerRepository(){
-   }
-
+   public MarkerRepository(){}
 
     public void addMarker(MarkerPoint marker){
-        markersCollection.add(marker);
+        database.collection("eventMarkers").add(marker);
     }
 
     public void deleteMarker(MarkerPoint marker){
-        markersCollection.document(marker.markerID).delete();
+        database.collection("eventMarkers").document(marker.getMarkerID()).delete();
     }
 
     public void markerListener() {
-        markersCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        database.collection("eventMarkers").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value,
                                 @Nullable FirebaseFirestoreException e) {

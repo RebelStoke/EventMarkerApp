@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.eventmarker.GUI.fragments.MapFragment"
+        android:name="com.example.eventmarker.View.fragments.MapFragment"
         android:label="MapFragment" />
     <fragment
         android:id="@+id/myMarkersFragments"
-        android:name="com.example.eventmarker.GUI.fragments.MyMarkersFragment"
+        android:name="com.example.eventmarker.View.fragments.MyMarkersFragment"
         android:label="MyMarkers"
         tools:layout="@layout/fragment_my_markers" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.eventmarker.GUI.fragments;
+package com.example.eventmarker.View.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.eventmarker.BLL.BLLManager;
+import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,9 +22,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private BLLManager manager;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    public MapFragment() {}
 
     @Nullable
     @Override
@@ -37,7 +35,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        }
+    }
 
 
     @Override
