@@ -65,7 +65,8 @@ public class BLLManager {
         repo.addMarker(new MarkerPoint(geoPoint, desc, user.getUid()));
     }
 
-    public void deleteMarker(MarkerPoint mark){
+    public void deleteMarker(MarkerPoint mark)
+    {
         repo.deleteMarker(mark);
     }
     

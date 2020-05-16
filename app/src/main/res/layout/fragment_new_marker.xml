@@ -13,10 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="1dp"
         android:text="Description:"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toStartOf="@+id/descriptionText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -26,13 +28,15 @@
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="311dp"
         android:text="End time:"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText3"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
         android:id="@+id/editText3"
@@ -43,19 +47,20 @@
         android:ems="10"
         android:inputType="date"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="155dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginBottom="525dp"
         android:src="@drawable/ic_beenhere_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.578"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01" />
 
     <EditText
         android:id="@+id/editText"
@@ -72,11 +77,15 @@
         android:id="@+id/descriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="65dp"
+        android:layout_marginBottom="3dp"
         android:ems="10"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
@@ -84,7 +93,9 @@
         android:layout_width="wrap_content"
         android:layout_height="43dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="3dp"
         android:text="Start time:"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
@@ -96,10 +107,11 @@
         android:id="@+id/addButton"
         android:layout_width="149dp"
         android:layout_height="77dp"
+        android:layout_marginBottom="52dp"
         android:text="Add Marker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

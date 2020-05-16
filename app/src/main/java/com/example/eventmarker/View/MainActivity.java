@@ -7,13 +7,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -37,6 +46,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         manager = BLLManager.getInstance();
+
+        // Obtain a new or prior instance of HotStockViewModel from the
+        // ViewModelProviders utility class.
+        FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
+
+        LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
+
+        liveData.observe(this, new Observer<QuerySnapshot>() {
+            @Override
+            public void onChanged(@Nullable QuerySnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    for (DocumentChange dc : dataSnapshot.getDocumentChanges()) {
+
+                        switch (dc.getType()) {
+                            case ADDED:
+                                GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
+                                String desc = dc.getDocument().getString("desc");
+                                System.out.println(geoPoint);
+                                System.out.println(desc);
+                                //BLLManager.getInstance().readMarker(dc.getDocument());
+                                break;
+                            case REMOVED:
+                                // BLLManager.getInstance().removeMarker(dc.getDocument());
+                                break;
+                        }
+                    }
+                }
+            }
+        });
 
         checkIfUserIsAlreadyLoggedIn();
         setUpToolbar();

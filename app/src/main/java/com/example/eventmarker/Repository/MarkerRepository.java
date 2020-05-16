@@ -39,11 +39,11 @@ public class MarkerRepository {
                 for (DocumentChange dc : value.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            Log.d(TAG, "New point: " + dc.getDocument().getData());
+                         //   Log.d(TAG, "New point: " + dc.getDocument().getData());
                             BLLManager.getInstance().readMarker(dc.getDocument());
                             break;
                         case REMOVED:
-                            Log.d(TAG, "Removed point: " + dc.getDocument().getData());
+                        //    Log.d(TAG, "Removed point: " + dc.getDocument().getData());
                             BLLManager.getInstance().removeMarker(dc.getDocument());
                             break;
                     }
