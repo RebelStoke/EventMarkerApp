@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 

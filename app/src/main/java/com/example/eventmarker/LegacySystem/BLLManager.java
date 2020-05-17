@@ -1,7 +1,6 @@
-package com.example.eventmarker.Model;
+package com.example.eventmarker.LegacySystem;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.LegacySystem.MarkerRepository;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;

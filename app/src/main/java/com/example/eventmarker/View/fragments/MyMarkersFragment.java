@@ -15,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.UserViewModel;
 import com.example.eventmarker.View.adapters.recycleAdapter;
 import com.example.eventmarker.R;
 import com.google.firebase.firestore.DocumentChange;
@@ -24,17 +24,16 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class MyMarkersFragment extends Fragment {
-
+    private UserViewModel userManager;
     public MyMarkersFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userManager = UserViewModel.getInstance();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class MyMarkersFragment extends Fragment {
                             String desc = dc.getDocument().getString("desc");
                             String itemID = dc.getDocument().getId();
                             System.out.println(userId);
-                            if (userId.equals("yQgTY9gvUpVeuv1akYYOw4YmmNI2")) { // TODO : Replace this with real user checking
+                            if (userId.equals(userManager.getUser().getUid())) {
                                 MarkerPoint mark = new MarkerPoint(geoPoint, desc, userId);
                                 mark.setMarkerID(itemID);
                                 mpList.add(mark);

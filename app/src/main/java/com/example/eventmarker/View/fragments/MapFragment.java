@@ -12,7 +12,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.LegacySystem.BLLManager;
 import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentChange;
@@ -28,8 +27,6 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-
-    private BLLManager manager;
 
     public MapFragment() {}
 

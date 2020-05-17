@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.eventmarker.Model.BLLManager;
 import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.UserViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -30,9 +30,11 @@ public class NewMarkerFragment extends Fragment {
 
     private double lat;
     private double lng;
+    private UserViewModel userManager;
 
-
-    public NewMarkerFragment() {}
+    public NewMarkerFragment() {
+        userManager = UserViewModel.getInstance();
+    }
 
     // TODO: Rename and change types and number of parameters
     public static NewMarkerFragment newInstance(double lat, double lng) {
@@ -63,7 +65,7 @@ public class NewMarkerFragment extends Fragment {
             public void onClick(View view) {
                 FirebaseViewModel viewModel = ViewModelProviders.of(requireActivity()).get(FirebaseViewModel.class);
                 TextView t = (TextView)v.findViewById(R.id.descriptionText);
-                viewModel.addMarker(new LatLng(lat, lng), t.getText().toString());
+                viewModel.addMarker(new LatLng(lat, lng), t.getText().toString(), userManager.getUser().getUid());
                 openMapFragment();
             }
         });

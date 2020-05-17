@@ -17,9 +17,9 @@ public class FirebaseViewModel extends ViewModel {
 
     private final FirestoreDAO liveData = new FirestoreDAO(EVENT_REF);
 
-    public void addMarker(LatLng latLng, String desc){
+    public void addMarker(LatLng latLng, String desc, String userID){
         GeoPoint geoPoint = new GeoPoint(latLng.latitude, latLng.longitude);
-        liveData.addMarker(new MarkerPoint(geoPoint, desc, "yQgTY9gvUpVeuv1akYYOw4YmmNI2")); // TODO: Replace this with real user data
+        liveData.addMarker(new MarkerPoint(geoPoint, desc, userID));
     }
 
     public void deleteMarker(MarkerPoint mark)

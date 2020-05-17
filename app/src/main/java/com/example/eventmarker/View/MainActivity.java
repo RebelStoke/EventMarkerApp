@@ -6,23 +6,13 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.eventmarker.Model.BLLManager;
-import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.UserViewModel;
 import com.example.eventmarker.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -36,7 +26,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private BLLManager manager;
+    private UserViewModel userManager;
     private static final int RC_SIGN_IN = 123;
 
 
@@ -45,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manager = BLLManager.getInstance();
+        userManager = UserViewModel.getInstance();
 
         checkIfUserIsAlreadyLoggedIn();
         setUpToolbar();
@@ -81,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
     private void checkIfUserIsAlreadyLoggedIn() {
-        manager.setUser(FirebaseAuth.getInstance().getCurrentUser());
-        if (manager.getUser() == null) {
+        if (userManager.getUser() == null) {
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -101,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         TextView nav_email = hView.findViewById(R.id.textEmail);
         TextView nav_name = hView.findViewById(R.id.textName);
         ImageView nav_picture = hView.findViewById(R.id.profileImage);
-        nav_email.setText(manager.getUser().getEmail());
-        nav_name.setText(manager.getUser().getDisplayName());
-        nav_picture.setImageURI(manager.getUser().getPhotoUrl());
+        nav_email.setText(userManager.getUser().getEmail());
+        nav_name.setText(userManager.getUser().getDisplayName());
+        nav_picture.setImageURI(userManager.getUser().getPhotoUrl());
     }
 
     @Override

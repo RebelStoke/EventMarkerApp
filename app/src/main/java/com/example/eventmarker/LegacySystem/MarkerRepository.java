@@ -3,7 +3,6 @@ package com.example.eventmarker.LegacySystem;
 import android.util.Log;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.Model.BLLManager;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
