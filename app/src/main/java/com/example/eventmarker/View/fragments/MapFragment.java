@@ -8,15 +8,24 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -39,12 +48,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         LatLng sydney = new LatLng(-34, 151);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        manager = BLLManager.getInstance();
-        manager.setMap(googleMap);
-        manager.dbListener();
+        FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
+
+        LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
+
+        liveData.observe(this, new Observer<QuerySnapshot>() {
+            @Override
+            public void onChanged(@androidx.annotation.Nullable QuerySnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    for (DocumentChange dc : dataSnapshot.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
+                            String desc = dc.getDocument().getString("desc");
+                            assert geoPoint != null;
+                            googleMap.addMarker(new MarkerOptions().position(new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude())).title(desc));
+                        }
+                    }
+                }
+            }
+        });
+
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {

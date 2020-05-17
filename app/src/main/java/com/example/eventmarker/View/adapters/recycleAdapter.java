@@ -1,22 +1,27 @@
 package com.example.eventmarker.View.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventmarker.Entities.MarkerPoint;
 import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 
 import java.util.List;
 
 public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.RecyclerViewHolder> {
     private List<MarkerPoint> mRecycleList;
-
+    private FirebaseViewModel viewModel;
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView1;
         private TextView mTextView2;
@@ -24,13 +29,19 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
+
             mTextView1 = itemView.findViewById(R.id.txt_desc);
             mTextView2 = itemView.findViewById(R.id.txt_creator);
             deleteButton = itemView.findViewById(R.id.btn_deleteMarker);
         }
     }
 
-    public recycleAdapter(List<MarkerPoint> markerList) {
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+    public recycleAdapter(Context context, List<MarkerPoint> markerList) {
+        viewModel = ViewModelProviders.of((FragmentActivity) context).get(FirebaseViewModel.class);
         mRecycleList = markerList;
     }
 
@@ -47,7 +58,7 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
         holder.mTextView2.setText(currentItem.getMarkerID());
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                BLLManager.getInstance().deleteMarker(currentItem);
+                viewModel.deleteMarker(currentItem);
                 mRecycleList.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 notifyItemRangeChanged(holder.getAdapterPosition(), mRecycleList.size());

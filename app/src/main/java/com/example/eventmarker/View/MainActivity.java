@@ -47,35 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         manager = BLLManager.getInstance();
 
-        // Obtain a new or prior instance of HotStockViewModel from the
-        // ViewModelProviders utility class.
-        FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
-
-        LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
-
-        liveData.observe(this, new Observer<QuerySnapshot>() {
-            @Override
-            public void onChanged(@Nullable QuerySnapshot dataSnapshot) {
-                if (dataSnapshot != null) {
-                    for (DocumentChange dc : dataSnapshot.getDocumentChanges()) {
-
-                        switch (dc.getType()) {
-                            case ADDED:
-                                GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
-                                String desc = dc.getDocument().getString("desc");
-                                System.out.println(geoPoint);
-                                System.out.println(desc);
-                                //BLLManager.getInstance().readMarker(dc.getDocument());
-                                break;
-                            case REMOVED:
-                                // BLLManager.getInstance().removeMarker(dc.getDocument());
-                                break;
-                        }
-                    }
-                }
-            }
-        });
-
         checkIfUserIsAlreadyLoggedIn();
         setUpToolbar();
         setUpNavBar();

@@ -1,7 +1,7 @@
 package com.example.eventmarker.Model;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.Repository.MarkerRepository;
+import com.example.eventmarker.LegacySystem.MarkerRepository;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -27,27 +27,30 @@ public class BLLManager {
         repo = new MarkerRepository();
     }
 
+ //No longer needed
     public static BLLManager getInstance(){
         return instance;
     }
 
+// ?!?!
     public void setMap(GoogleMap mMap){
         this.mMap = mMap;
     }
-
+// Change this to AuthViewModel
     public void setUser(FirebaseUser user){
         this.user = user;
     }
-
+    // Change this to AuthViewModel
     public FirebaseUser getUser(){
         return user;
     }
-
+    // ?!?!?
     public void dbListener(){
         markersHashMap = new HashMap<>();
         repo.markerListener();
     }
-    
+
+    //no longer needed
     public List<MarkerPoint> getUserMarkers(){
         List<MarkerPoint> usersMarkers = new ArrayList<>();
         Iterator it = markersHashMap.entrySet().iterator();
@@ -59,17 +62,17 @@ public class BLLManager {
         }
         return usersMarkers;
     }
-
+   //No longer needed
     public void addMarker(LatLng latLng, String desc){
         GeoPoint geoPoint = new GeoPoint(latLng.latitude, latLng.longitude);
         repo.addMarker(new MarkerPoint(geoPoint, desc, user.getUid()));
     }
-
+    //No longer needed
     public void deleteMarker(MarkerPoint mark)
     {
         repo.deleteMarker(mark);
     }
-    
+    //I GUI
     public void readMarker(QueryDocumentSnapshot document) {
         GeoPoint geoPoint = document.getGeoPoint("latLng");
         String desc = document.getString("desc");
@@ -81,7 +84,7 @@ public class BLLManager {
         point.setMarkerID(document.getId());
         markersHashMap.put(point, m);
     }
-
+    //I GUI
     public void removeMarker(QueryDocumentSnapshot document) {
 
         MarkerPoint markerToDelete = new MarkerPoint(document.getGeoPoint("latLng"),

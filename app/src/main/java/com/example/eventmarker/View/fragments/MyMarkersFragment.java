@@ -2,7 +2,11 @@ package com.example.eventmarker.View.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,10 +16,17 @@ import android.view.ViewGroup;
 
 import com.example.eventmarker.Entities.MarkerPoint;
 import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.View.adapters.recycleAdapter;
 import com.example.eventmarker.R;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MyMarkersFragment extends Fragment {
 
@@ -37,12 +48,39 @@ public class MyMarkersFragment extends Fragment {
     }
 
     public void setRecyclerView(View v){
-        RecyclerView mRecyclerView = v.findViewById(R.id.recyclerView);
-        List<MarkerPoint> mpList = BLLManager.getInstance().getUserMarkers();
+        final RecyclerView mRecyclerView = v.findViewById(R.id.recyclerView);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView.Adapter mAdapter = new recycleAdapter(mpList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        final List<MarkerPoint> mpList = new ArrayList<>();
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        //Model-view-ViewModel
+        FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
+
+        LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
+
+        liveData.observe(this, new Observer<QuerySnapshot>() {
+            @Override
+            public void onChanged(@Nullable QuerySnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    for (DocumentChange dc : dataSnapshot.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
+                            String userId = dc.getDocument().getString("creator_UID");
+                            String desc = dc.getDocument().getString("desc");
+                            String itemID = dc.getDocument().getId();
+                            System.out.println(userId);
+                            if (userId.equals("yQgTY9gvUpVeuv1akYYOw4YmmNI2")) { // TODO : Replace this with real user checking
+                                MarkerPoint mark = new MarkerPoint(geoPoint, desc, userId);
+                                mark.setMarkerID(itemID);
+                                mpList.add(mark);
+                            }
+                        }
+                    }
+                    // TODO: this might be a bad place to assign the adapter. Should check a better spot for this
+                    RecyclerView.Adapter mAdapter = new recycleAdapter(getActivity(),mpList);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            }
+        });
     }
 }

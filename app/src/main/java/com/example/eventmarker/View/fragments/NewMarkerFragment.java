@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.eventmarker.Model.BLLManager;
+import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -59,8 +61,9 @@ public class NewMarkerFragment extends Fragment {
         v.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseViewModel viewModel = ViewModelProviders.of(requireActivity()).get(FirebaseViewModel.class);
                 TextView t = (TextView)v.findViewById(R.id.descriptionText);
-                BLLManager.getInstance().addMarker(new LatLng(lat, lng), t.getText().toString());
+                viewModel.addMarker(new LatLng(lat, lng), t.getText().toString());
                 openMapFragment();
             }
         });

@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.eventmarker.Entities.MarkerPoint;
 import com.example.eventmarker.Repository.FirestoreDAO;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class FirebaseViewModel extends ViewModel {
@@ -17,9 +17,18 @@ public class FirebaseViewModel extends ViewModel {
 
     private final FirestoreDAO liveData = new FirestoreDAO(EVENT_REF);
 
+    public void addMarker(LatLng latLng, String desc){
+        GeoPoint geoPoint = new GeoPoint(latLng.latitude, latLng.longitude);
+        liveData.addMarker(new MarkerPoint(geoPoint, desc, "yQgTY9gvUpVeuv1akYYOw4YmmNI2")); // TODO: Replace this with real user data
+    }
+
+    public void deleteMarker(MarkerPoint mark)
+    {
+        liveData.deleteMarker(mark);
+    }
+
     @NonNull
     public LiveData<QuerySnapshot> getDataSnapshotLiveData() {
-        System.out.println("NEW ASS LIVE DATA " + liveData);
         return liveData;
     }
 }
