@@ -1,10 +1,18 @@
 package com.example.eventmarker.View.fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.MapViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,14 +29,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+import java.util.Objects;
 
-    public MapFragment() {}
+public class MapFragment extends Fragment implements OnMapReadyCallback {
+    private MapViewModel mapViewModel;
+    private LocationManager locationManager;
+
+    public MapFragment() {
+    }
 
     @Nullable
     @Override
@@ -40,13 +55,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
     }
 
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        LatLng sydney = new LatLng(-34, 151);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+        Criteria criteria = new Criteria();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
+            assert location != null;
+            LatLng centerLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(centerLocation));
+
+        }
         FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
 
         LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
@@ -66,7 +90,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
-
+        mapViewModel = MapViewModel.getInstance();
+        mapViewModel.setMap(googleMap);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
