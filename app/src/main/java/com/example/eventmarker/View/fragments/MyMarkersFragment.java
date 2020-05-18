@@ -64,11 +64,12 @@ public class MyMarkersFragment extends Fragment {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
                             GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
                             String userId = dc.getDocument().getString("creator_UID");
+                            String name = dc.getDocument().getString("nameOfMarker");
                             String desc = dc.getDocument().getString("desc");
                             String itemID = dc.getDocument().getId();
                             System.out.println(userId);
                             if (userId.equals(userManager.getUser().getUid())) {
-                                MarkerPoint mark = new MarkerPoint(geoPoint, desc, userId);
+                                MarkerPoint mark = new MarkerPoint(geoPoint,name, desc, userId);
                                 mark.setMarkerID(itemID);
                                 mpList.add(mark);
                             }

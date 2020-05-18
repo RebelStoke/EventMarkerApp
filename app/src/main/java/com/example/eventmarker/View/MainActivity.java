@@ -1,8 +1,10 @@
 package com.example.eventmarker.View;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private void setUpNavBar(){
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.myMarkersFragments, R.id.mapFragment)
                 .setDrawerLayout(drawer)
@@ -101,7 +102,19 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                userManager.logOut();
+                checkIfUserIsAlreadyLoggedIn();
+                setUpUserInfoInMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

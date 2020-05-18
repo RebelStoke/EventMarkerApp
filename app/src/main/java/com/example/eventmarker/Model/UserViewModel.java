@@ -16,4 +16,6 @@ public class UserViewModel {
     public FirebaseUser getUser(){
         return FirebaseAuth.getInstance().getCurrentUser();
     }
+
+    public void logOut(){FirebaseAuth.getInstance().signOut();}
 }

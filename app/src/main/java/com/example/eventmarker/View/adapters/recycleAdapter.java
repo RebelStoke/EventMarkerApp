@@ -54,7 +54,7 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
     public void onBindViewHolder(final RecyclerViewHolder holder, int position) {
         final MarkerPoint currentItem = mRecycleList.get(position);
         holder.mTextView1.setText(currentItem.getDesc());
-        holder.mTextView2.setText(currentItem.getMarkerID());
+        holder.mTextView2.setText(currentItem.getNameOfMarker());
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 viewModel.deleteMarker(currentItem);

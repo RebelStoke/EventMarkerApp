@@ -64,8 +64,9 @@ public class NewMarkerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseViewModel viewModel = ViewModelProviders.of(requireActivity()).get(FirebaseViewModel.class);
-                TextView t = (TextView)v.findViewById(R.id.descriptionText);
-                viewModel.addMarker(new LatLng(lat, lng), t.getText().toString(), userManager.getUser().getUid());
+                TextView nameText = (TextView)v.findViewById(R.id.nameText);
+                TextView descriptionText = (TextView)v.findViewById(R.id.descriptionText);
+                viewModel.addMarker(new LatLng(lat, lng), nameText.getText().toString(),descriptionText.getText().toString(), userManager.getUser().getUid());
                 openMapFragment();
             }
         });

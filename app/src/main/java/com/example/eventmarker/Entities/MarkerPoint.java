@@ -5,6 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.Date;
 
 public class MarkerPoint {
+    private String nameOfMarker;
     private String markerID;
     private GeoPoint latLng;
     private String desc;
@@ -12,14 +13,23 @@ public class MarkerPoint {
     private Date startDate;
     private Date endDate;
 
-    public MarkerPoint(GeoPoint latLng, String desc, String creator_UID) {
+    public MarkerPoint(GeoPoint latLng, String nameOfMarker, String desc, String creator_UID) {
         this.latLng = latLng;
+        this.nameOfMarker= nameOfMarker;
         this.desc = desc;
         this.creator_UID = creator_UID;
     }
 
     public String getMarkerID() {
         return markerID;
+    }
+
+    public String getNameOfMarker() {
+        return nameOfMarker;
+    }
+
+    public void setNameOfMarker(String nameOfMarker) {
+        this.nameOfMarker = nameOfMarker;
     }
 
     public void setMarkerID(String markerID) {

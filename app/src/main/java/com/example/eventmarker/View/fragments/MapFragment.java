@@ -12,7 +12,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.eventmarker.LegacySystem.BLLManager;
 import com.example.eventmarker.Model.FirebaseViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
