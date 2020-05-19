@@ -10,8 +10,8 @@ public class MarkerPoint {
     private GeoPoint latLng;
     private String desc;
     private String creator_UID;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
 
     public MarkerPoint(GeoPoint latLng, String nameOfMarker, String desc, String creator_UID) {
         this.latLng = latLng;
@@ -60,19 +60,19 @@ public class MarkerPoint {
         this.creator_UID = creator_UID;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 }

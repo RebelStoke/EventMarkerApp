@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 userManager.logOut();
                 checkIfUserIsAlreadyLoggedIn();
-                setUpUserInfoInMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
