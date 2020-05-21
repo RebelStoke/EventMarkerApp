@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                                     new AuthUI.IdpConfig.PhoneBuilder().build()))
                             .build(),
                     RC_SIGN_IN);
+        }else{
+            setUpUserInfoInMenu();
         }
     }
 
