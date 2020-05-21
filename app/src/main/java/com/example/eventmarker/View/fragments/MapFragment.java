@@ -1,7 +1,6 @@
 package com.example.eventmarker.View.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -20,7 +19,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.MarkerViewModel;
 import com.example.eventmarker.Model.MapViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +28,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.GeoPoint;
@@ -41,8 +39,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private LocationManager locationManager;
 
-    public MapFragment() {
-    }
+    public MapFragment() {}
 
     @Nullable
     @Override
@@ -62,8 +59,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
-
         Criteria criteria = new Criteria();
+        //In case the permisions are not checked. Do not move the camera anywhere.
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
             assert location != null;
@@ -71,10 +68,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(centerLocation));
 
         }
-        FirebaseViewModel viewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
+        MarkerViewModel viewModel = ViewModelProviders.of(this).get(MarkerViewModel.class);
 
         LiveData<QuerySnapshot> liveData = viewModel.getDataSnapshotLiveData();
-
+        //Populate the map with markers
         liveData.observe(this, new Observer<QuerySnapshot>() {
             @Override
             public void onChanged(@androidx.annotation.Nullable QuerySnapshot dataSnapshot) {
@@ -83,8 +80,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
                             GeoPoint geoPoint = dc.getDocument().getGeoPoint("latLng");
                             String desc = dc.getDocument().getString("desc");
+
+                            String startTime = dc.getDocument().getString("startDate");
+                            if(startTime == null) startTime= "";
+
+                            String endTime = dc.getDocument().getString("endDate");
+                            if(endTime == null) endTime= "";
+
                             assert geoPoint != null;
-                            googleMap.addMarker(new MarkerOptions().position(new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude())).title(desc));
+                            googleMap.addMarker(new MarkerOptions().position(new LatLng(geoPoint.getLatitude(),
+                                    geoPoint.getLongitude())).title(desc + " " + startTime + " - " + endTime));
                         }
                     }
                 }

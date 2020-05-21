@@ -16,8 +16,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.eventmarker.Model.FirebaseViewModel;
-import com.example.eventmarker.Model.UserViewModel;
+import com.example.eventmarker.Model.MarkerViewModel;
+import com.example.eventmarker.Model.AuthViewModel;
 import com.example.eventmarker.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -36,14 +36,14 @@ public class NewMarkerFragment extends Fragment {
 
     private double lat;
     private double lng;
-    private UserViewModel userManager;
+    private AuthViewModel userManager;
 
     public NewMarkerFragment() {
-        userManager = UserViewModel.getInstance();
+        userManager = AuthViewModel.getInstance();
     }
 
     // TODO: Rename and change types and number of parameters
-    public static NewMarkerFragment newInstance(double lat, double lng) {
+    static NewMarkerFragment newInstance(double lat, double lng) {
         NewMarkerFragment fragment = new NewMarkerFragment();
         Bundle args = new Bundle();
         args.putDouble(ARG_PARAM1, lat);
@@ -69,10 +69,11 @@ public class NewMarkerFragment extends Fragment {
         final EditText startDate=(EditText) v.findViewById(R.id.editText);
         final EditText endDate=(EditText) v.findViewById(R.id.editText3);
 
+        //Once you Add a marker. Add it in database and reopen mapfragment
         v.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseViewModel viewModel = ViewModelProviders.of(requireActivity()).get(FirebaseViewModel.class);
+                MarkerViewModel viewModel = ViewModelProviders.of(requireActivity()).get(MarkerViewModel.class);
                 TextView nameText = (TextView)v.findViewById(R.id.nameText);
                 TextView descriptionText = (TextView)v.findViewById(R.id.descriptionText);
                 viewModel.addMarker(new LatLng(lat, lng), nameText.getText().toString(),startDate.getText().toString(),endDate.getText().toString(),descriptionText.getText().toString(), userManager.getUser().getUid());
@@ -80,25 +81,12 @@ public class NewMarkerFragment extends Fragment {
             }
         });
 
-        //Set up calendar
-        final Calendar cldr = Calendar.getInstance();
-        final int day = cldr.get(Calendar.DAY_OF_MONTH);
-        final int month = cldr.get(Calendar.MONTH);
-        final int year = cldr.get(Calendar.YEAR);
-
         //For both Start date and end date we set up an individual date picker
         startDate.setInputType(InputType.TYPE_NULL);
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // date picker dialog
-                DatePickerDialog picker = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                startDate.setText(year +"/" + (monthOfYear + 1) + "/" + dayOfMonth);
-                            }
-                        }, year, month, day);
+                DatePickerDialog picker = setUpOnClickDatePicker(startDate);
                 picker.show();
             }
         });
@@ -107,18 +95,27 @@ public class NewMarkerFragment extends Fragment {
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // date picker dialog
-                DatePickerDialog picker = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                endDate.setText(year +"/" + (monthOfYear + 1) + "/" + dayOfMonth);
-                            }
-                        }, year, month, day);
+                DatePickerDialog picker = setUpOnClickDatePicker(endDate);
                 picker.show();
             }
         });
         return v;
+    }
+
+    private DatePickerDialog setUpOnClickDatePicker(final EditText dateToPick){
+        //Set up calendar
+        final Calendar cldr = Calendar.getInstance();
+        final int day = cldr.get(Calendar.DAY_OF_MONTH);
+        final int month = cldr.get(Calendar.MONTH);
+        final int year = cldr.get(Calendar.YEAR);
+
+        return new DatePickerDialog(getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        dateToPick.setText(year +"/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                    }
+                }, year, month, day);
     }
 
     private void openMapFragment(){

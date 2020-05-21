@@ -13,14 +13,14 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventmarker.Entities.MarkerPoint;
-import com.example.eventmarker.Model.FirebaseViewModel;
+import com.example.eventmarker.Model.MarkerViewModel;
 import com.example.eventmarker.R;
 
 import java.util.List;
 
 public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.RecyclerViewHolder> {
     private List<MarkerPoint> mRecycleList;
-    private FirebaseViewModel viewModel;
+    private MarkerViewModel viewModel;
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView1;
         private TextView mTextView2;
@@ -40,7 +40,7 @@ public class recycleAdapter extends RecyclerView.Adapter<recycleAdapter.Recycler
         super.onAttachedToRecyclerView(recyclerView);
     }
     public recycleAdapter(Context context, List<MarkerPoint> markerList) {
-        viewModel = ViewModelProviders.of((FragmentActivity) context).get(FirebaseViewModel.class);
+        viewModel = ViewModelProviders.of((FragmentActivity) context).get(MarkerViewModel.class);
         mRecycleList = markerList;
     }
 

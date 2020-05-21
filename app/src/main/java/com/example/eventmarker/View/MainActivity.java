@@ -3,31 +3,27 @@ package com.example.eventmarker.View;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eventmarker.Model.MapViewModel;
-import com.example.eventmarker.Model.UserViewModel;
+import com.example.eventmarker.Model.AuthViewModel;
 import com.example.eventmarker.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -44,7 +40,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private UserViewModel userManager;
+    private AuthViewModel userManager;
     private MapViewModel mapViewModel;
     private static final int RC_SIGN_IN = 123;
     private LocationManager locationManager;
@@ -56,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Check if phone accepted network permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
                     ACCESS_FINE_LOCATION_CODE);
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION,
                     ACCESS_COARSE_LOCATION_CODE);
         }
-        userManager = UserViewModel.getInstance();
+        userManager = AuthViewModel.getInstance();
         mapViewModel = MapViewModel.getInstance();
         checkIfUserIsAlreadyLoggedIn();
         setUpToolbar();
         setUpNavBar();
-        setUpUserInfoInMenu();
     }
 
 
@@ -76,12 +72,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        //Use this for GPS
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Criteria criteria = new Criteria();
+                //Before toolbar is set up, we are already checking for permissions
                 @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
                 assert location != null;
                 LatLng centerLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkIfUserIsAlreadyLoggedIn() {
-        if (userManager.getUser() == null) {
+        if (userManager.getUser() == null) { //If there is no user. We just call authUI sign in
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -119,12 +115,14 @@ public class MainActivity extends AppCompatActivity {
     private void setUpUserInfoInMenu() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
-        TextView nav_email = hView.findViewById(R.id.textEmail);
-        TextView nav_name = hView.findViewById(R.id.textName);
-        ImageView nav_picture = hView.findViewById(R.id.profileImage);
-        nav_email.setText(userManager.getUser().getEmail());
-        nav_name.setText(userManager.getUser().getDisplayName());
-        nav_picture.setImageURI(userManager.getUser().getPhotoUrl());
+        if(userManager.getUser() != null) {
+            TextView nav_email = hView.findViewById(R.id.textEmail);
+            TextView nav_name = hView.findViewById(R.id.textName);
+            ImageView nav_picture = hView.findViewById(R.id.profileImage);
+            nav_email.setText(userManager.getUser().getEmail());
+            nav_name.setText(userManager.getUser().getDisplayName());
+            nav_picture.setImageURI(userManager.getUser().getPhotoUrl());
+        }
     }
 
     @Override
@@ -165,4 +163,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setUpUserInfoInMenu();
+    }
 }

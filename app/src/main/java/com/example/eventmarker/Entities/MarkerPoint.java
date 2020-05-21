@@ -2,8 +2,12 @@ package com.example.eventmarker.Entities;
 
 import com.google.firebase.firestore.GeoPoint;
 
-import java.util.Date;
-
+/**
+ *  Marker class which contains all the information from firebase.
+ *  markerID - ID of item in firebase. If the item is just added. It will not contain any ID
+ *  nameOfMarker - name of marker
+ *  creator_UID - the user that created marker
+ */
 public class MarkerPoint {
     private String nameOfMarker;
     private String markerID;

@@ -25,9 +25,10 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="117dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="60dp"
         app:srcCompat="@android:drawable/ic_menu_compass" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,16 +3,19 @@ package com.example.eventmarker.Model;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class UserViewModel {
-    private static UserViewModel instance = new UserViewModel();
+/**
+ * This class is a singleton.
+ * Use this class to maintain User authentication in the application
+ */
+public class AuthViewModel {
+    private static AuthViewModel instance = new AuthViewModel();
 
-    private UserViewModel(){
-    }
+    private AuthViewModel(){}
 
-    public static UserViewModel getInstance(){
+    public static AuthViewModel getInstance(){
         return instance;
     }
-    // Change this to AuthViewModel
+
     public FirebaseUser getUser(){
         return FirebaseAuth.getInstance().getCurrentUser();
     }
